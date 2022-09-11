@@ -4,7 +4,7 @@ metadata:
   name: mysql
   labels:
     app: mysql
-    name: NouraAlotaibi
+    name: ahmed
 spec:
   replicas: 1 
   selector:
@@ -42,7 +42,7 @@ metadata:
   name: mysql-pv
   labels:
     app: tawazun
-    name: NouraAlotaibi
+    name: ahmed
 
 spec:
   storageClassName: manual
@@ -59,7 +59,7 @@ metadata:
   name: mysql-pv-claim
   labels:
       app: tawazun
-      name: NouraAlotaibi
+      name: ahmed
 spec:
   storageClassName: manual
   accessModes:
@@ -74,7 +74,7 @@ metadata:
   name: mysql
   labels:
     app: tawazun
-    name: NouraAlotaibi
+    name: ahmed
 spec:
  selector:
     app: mysql
@@ -89,7 +89,7 @@ metadata:
   name: tawazun
   labels:
     app: tawazun
-    name: NouraAlotaibi
+    name: ahmed
 spec:
   replicas: 1 
   selector:
@@ -101,7 +101,7 @@ spec:
         app: tawazun
     spec:
       containers:
-        - image: nourab/twzun
+        - image: nxzcint/twzun
           name: tawazun
           env:
             - name: DB_URL
@@ -123,11 +123,11 @@ metadata:
   name: tawazun-service
   labels:
     app: tawazun
-    name: NouraAlotaibi
+    name: ahmed
 spec:
  selector:
    app: tawazun-service
- type: NodePort
+ type: LoadBalancer
  ports:
     - protocol: TCP
       port: 8080
