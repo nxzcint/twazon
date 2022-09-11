@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tawazun-service
+  labels:
+    app: tawazun
+    name: NouraAlotaibi
+spec:
+ selector:
+   app: tawazun-service
+ type: NodePort
+ ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30454

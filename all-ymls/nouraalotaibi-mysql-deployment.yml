@@ -1,0 +1,135 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+    name: NouraAlotaibi
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: mysql
+  strategy:
+    type: Recreate    
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: DevOps2022
+            - name: MYSQL_DATABASE
+              value: tawazun  
+          ports:
+            - containerPort: 3306
+              name: mysql
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-pv-claim
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv
+  labels:
+    app: tawazun
+    name: NouraAlotaibi
+
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+  labels:
+      app: tawazun
+      name: NouraAlotaibi
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    app: tawazun
+    name: NouraAlotaibi
+spec:
+ selector:
+    app: mysql
+ type: ClusterIP
+ ports:
+    - protocol: TCP
+      port: 3306
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tawazun
+  labels:
+    app: tawazun
+    name: NouraAlotaibi
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: tawazun
+  template:
+    metadata:
+      labels:
+        app: tawazun
+    spec:
+      containers:
+        - image: nourab/twzun
+          name: tawazun
+          env:
+            - name: DB_URL
+              value: mysql
+            - name: DB_PORT
+              value: '3306'  
+            - name: DB_NAME
+              value: tawazun  
+            - name: DB_USERNAME
+              value: root  
+            - name: DB_PASSWORD
+              value: DevOps2022
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tawazun-service
+  labels:
+    app: tawazun
+    name: NouraAlotaibi
+spec:
+ selector:
+   app: tawazun-service
+ type: NodePort
+ ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30454

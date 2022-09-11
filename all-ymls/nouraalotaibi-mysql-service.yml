@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    app: tawazun
+    name: NouraAlotaibi
+spec:
+ selector:
+    app: mysql
+ type: ClusterIP
+ ports:
+    - protocol: TCP
+      port: 3306
